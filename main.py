@@ -21,20 +21,20 @@ entry = tk.Text(win, height=100, width=150, font=('Courier New', 12), bg='#21212
 entry.pack()
 
 ##File Handaling
-def appendToFile():
+def appendToFile(event):
     userCode = entry.get("1.0", tk.END).strip()
     userFileLocation = filedialog.askopenfilename(title="Save to file")
     with open(userFileLocation, 'w') as file:
         file.write(userCode)
 
-def openFile():
+def openFile(event):
     userFileLocation = filedialog.askopenfilename(title="Open file")
     with open(userFileLocation, 'r') as file:
         userFileContent = file.read()
         entry.delete("1.0", tk.END)
         entry.insert(tk.END, userFileContent)
 
-def newFile():
+def newFile(event):
     userFileLocation = filedialog.asksaveasfile(initialdir="C:\\Users",defaultextension='.txt',filetypes=[
         ("Text file",".txt"),
         ("HTML file", ".htm"),("JavaScript file", ".js"),("CSS file", ".css"),
@@ -49,7 +49,7 @@ def newFile():
         file.write('##//File Created with SyntaxEdit')
     openFile()
     
-def runFile():
+def runFile(event):
     userFileLocation = filedialog.askopenfilename(title="Select file to run")
     if sy.platform == "win32":
         command = ["cmd.exe", "/c", userFileLocation]
@@ -57,7 +57,7 @@ def runFile():
         command = ["sh", userFileLocation]
     sub.run(command)
 
-def replaceText():
+def replaceText(event):
     replace = tk.Tk()
     replace.title('SyntaxEdit - Replace')
     replace.iconbitmap(r'SyntaxEditLogo.ico')
@@ -79,7 +79,7 @@ def replaceText():
     replaceButton.pack()
     replace.mainloop()
 
-def findText():
+def findText(event):
     find = tk.Tk()
     find.title('SyntaxEdit - Find')
     find.iconbitmap(r'SyntaxEditLogo.ico')
@@ -98,7 +98,7 @@ def findText():
     findButton.pack()
     find.mainloop()
 
-def clearFile():
+def clearFile(event):
     warning = tk.Tk()
     warning.title('SyntaxEdit - Find')
     warning.iconbitmap(r'SyntaxEditLogo.ico')
@@ -126,6 +126,8 @@ def openChangelog():
     tk.Label(cl, font=('Courier New', 15), fg='white', bg='black', text='Added Chanage Color').pack()
     tk.Label(cl, font=('Courier New', 15), fg='white', bg='black', text='Added Font/Size').pack()
     tk.Label(cl, font=('Courier New', 15), fg='white', bg='black', text='Added Private Mode').pack()
+    tk.Label(cl, font=('Courier New Bold', 25), fg='white', bg='black', text='v1.2').pack()
+    tk.Label(cl, font=('Courier New', 15), fg='white', bg='black', text='Added Keyboard Shortcuts').pack()
     cl.mainloop()
 
 def changeColor():
@@ -142,10 +144,10 @@ def darkMode():
     title.config(bg='black', fg='white')
     entry.config(bg='#212121')
 
-def privMode():
+def privMode(event):
     win.config(bg='black')
     title.config(bg='black', fg='white')
-    entry.config(fg='#171717', bg='#212121')
+    entry.config(fg='#212121', bg='#212121')
 
 def changeFont():
     fontConfig = tk.Tk()
@@ -192,5 +194,17 @@ otherMenu.add_separator()
 otherMenu.add_command(label='Light Mode',command=lightMode)
 otherMenu.add_command(label='Dark Mode',command=darkMode)
 otherMenu.add_command(label='Private Mode',command=privMode)
+
+##Keyboard Shortcuts
+#File Handaling
+win.bind('<Control-s>', appendToFile)
+win.bind('<Control-o>', openFile)
+win.bind('<Control-n>', newFile)
+win.bind('<Control-r>', runFile)
+#Other Bindings
+win.bind('<Control-h>', replaceText)
+win.bind('<Control-f>', findText)
+win.bind('<Control-l>', clearFile)
+win.bind('<Control-p>', privMode)
 
 win.mainloop()
