@@ -20,7 +20,6 @@ title.pack()
 entry = tk.Text(win, height=100, width=150, font=('Courier New', 12), bg='#212121', fg='#31bd62')
 entry.pack()
 
-
 ##File Handaling
 def appendToFile():
     userCode = entry.get("1.0", tk.END).strip()
@@ -91,7 +90,7 @@ def findText():
     def findChar():
         userChar = findBox.get()
         userWanted = entry.get("1.0", tk.END).strip().find(userChar)
-        userCharHighlight = '===========================\n' + '============' + userChar + '============\n' + '==========================='
+        userCharHighlight = '<<<<<' + userChar + '>>>>>'
         newContent = entry.get("1.0", tk.END).strip().replace(userChar, userCharHighlight)
         entry.delete("1.0", tk.END)
         entry.insert("1.0", newContent)
@@ -109,7 +108,6 @@ def clearFile():
     tk.Button(warning, text='Clear File', command=clearCont).pack()
     warning.mainloop()
 
-##Changelog
 def openChangelog():
     cl = tk.Tk()
     cl.title('SyntaxEdit - Changelog')
@@ -123,6 +121,11 @@ def openChangelog():
     tk.Label(cl, font=('Courier New', 15), fg='white', bg='black', text='Added Find').pack()
     tk.Label(cl, font=('Courier New', 15), fg='white', bg='black', text='Added Dark Mode').pack()
     tk.Label(cl, font=('Courier New', 15), fg='white', bg='black', text='Added Clear Code').pack()
+    tk.Label(cl, font=('Courier New Bold', 25), fg='white', bg='black', text='v1.1').pack()
+    tk.Label(cl, font=('Courier New', 15), fg='white', bg='black', text='Added Light Mode').pack()
+    tk.Label(cl, font=('Courier New', 15), fg='white', bg='black', text='Added Chanage Color').pack()
+    tk.Label(cl, font=('Courier New', 15), fg='white', bg='black', text='Added Font/Size').pack()
+    tk.Label(cl, font=('Courier New', 15), fg='white', bg='black', text='Added Private Mode').pack()
     cl.mainloop()
 
 def changeColor():
@@ -138,6 +141,27 @@ def darkMode():
     win.config(bg='black')
     title.config(bg='black', fg='white')
     entry.config(bg='#212121')
+
+def privMode():
+    win.config(bg='black')
+    title.config(bg='black', fg='white')
+    entry.config(fg='#171717', bg='#212121')
+
+def changeFont():
+    fontConfig = tk.Tk()
+    fontConfig.title('SyntaxEdit - Font Configurations')
+    fontConfig.iconbitmap(r'SyntaxEditLogo.ico')
+    fontConfig.geometry('500x500')
+    tk.Label(fontConfig, text='Font Name:').pack()
+    fontNameEntry = tk.Entry(fontConfig)
+    fontNameEntry.pack()
+    tk.Label(fontConfig, text='Font Size:').pack()
+    sizeEntry = tk.Entry(fontConfig)
+    sizeEntry.pack()
+    def applyFont():
+        entry.config(font=(fontNameEntry.get(), sizeEntry.get()))
+    tk.Button(fontConfig, text='Apply', command=applyFont).pack()
+    fontConfig.mainloop()
 
 ##Menubar
 menubar = Menu(win)
@@ -163,8 +187,10 @@ menubar.add_cascade(label='Other',menu=otherMenu)
 otherMenu.add_command(label='Changelog',command=openChangelog)
 otherMenu.add_separator()
 otherMenu.add_command(label='Change Color',command=changeColor)
+otherMenu.add_command(label='Change Font and Size',command=changeFont)
 otherMenu.add_separator()
 otherMenu.add_command(label='Light Mode',command=lightMode)
 otherMenu.add_command(label='Dark Mode',command=darkMode)
+otherMenu.add_command(label='Private Mode',command=privMode)
 
 win.mainloop()
