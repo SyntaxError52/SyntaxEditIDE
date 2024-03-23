@@ -8,7 +8,7 @@ import sys as sy
   
 ##Graphical Configirations
 win = tk.Tk()
-win.title("SyntaxEdit")
+win.title('SyntaxEdit')
 win.iconbitmap(r'SyntaxEditLogo.ico')
 win.configure(bg="black")
 win.geometry("500x600")
@@ -33,6 +33,7 @@ def openFile(event):
         userFileContent = file.read()
         entry.delete("1.0", tk.END)
         entry.insert(tk.END, userFileContent)
+    win.title(f'SyntaxEdit - {userFileLocation}')
 
 def newFile(event):
     userFileLocation = filedialog.asksaveasfile(initialdir="C:\\Users",defaultextension='.txt',filetypes=[
@@ -90,7 +91,7 @@ def findText(event):
     def findChar():
         userChar = findBox.get()
         userWanted = entry.get("1.0", tk.END).strip().find(userChar)
-        userCharHighlight = '<<<<<' + userChar + '>>>>>'
+        userCharHighlight = '<<<<<<' + userChar + '>>>>>>'
         newContent = entry.get("1.0", tk.END).strip().replace(userChar, userCharHighlight)
         entry.delete("1.0", tk.END)
         entry.insert("1.0", newContent)
@@ -128,21 +129,37 @@ def openChangelog():
     tk.Label(cl, font=('Courier New', 15), fg='white', bg='black', text='Added Private Mode').pack()
     tk.Label(cl, font=('Courier New Bold', 25), fg='white', bg='black', text='v1.2').pack()
     tk.Label(cl, font=('Courier New', 15), fg='white', bg='black', text='Added Keyboard Shortcuts').pack()
+    tk.Label(cl, font=('Courier New', 15), fg='white', bg='black', text='Added File Location Title').pack()
+    tk.Label(cl, font=('Courier New', 15), fg='white', bg='black', text='Added Help').pack()
     cl.mainloop()
+
+
+def help():
+    hp = tk.Tk()
+    hp.title('SyntaxEdit - Help')
+    hp.iconbitmap(r'SyntaxEditLogo.ico')
+    hp.configure(bg="black")
+    hp.geometry("400x175")
+    tk.Label(hp, font=('Courier New Bold', 25), fg='white', bg='black', text='Help Page').pack()
+    tk.Label(hp, font=('Courier New', 15), fg='white', bg='black', text='Handle files using the file menu').pack()
+    tk.Label(hp, font=('Courier New', 15), fg='white', bg='black', text='Check changes in the changelog').pack()
+    tk.Label(hp, font=('Courier New', 15), fg='white', bg='black', text='Enter your code in the text box').pack()
+    tk.Label(hp, font=('Courier New', 15), fg='white', bg='black', text='Github Repo Name: SyntaxEditIDE').pack()
+    hp.mainloop()
 
 def changeColor():
     color = colorchooser.askcolor(title='Pick a color')
     entry.config(fg=color[1])
 
 def lightMode():
-    win.config(bg='white')
-    title.config(bg='white', fg='black')
-    entry.config(bg='white')
+    win.config(bg='#C9C9C9')
+    title.config(bg='#C9C9C9', fg='black')
+    entry.config(bg='#EDEDED', fg='black')
 
-def darkMode():
+def darkMode(event):
     win.config(bg='black')
     title.config(bg='black', fg='white')
-    entry.config(bg='#212121')
+    entry.config(bg='#212121', fg='white')
 
 def privMode(event):
     win.config(bg='black')
@@ -165,35 +182,32 @@ def changeFont():
     tk.Button(fontConfig, text='Apply', command=applyFont).pack()
     fontConfig.mainloop()
 
-##Menubar
-menubar = Menu(win)
-win.config(menu=menubar)
+def appendToFileFM():
+    appendToFile(Event)
 
-fileMenu = Menu(menubar, tearoff=0)
-menubar.add_cascade(label='File',menu=fileMenu)
-fileMenu.add_command(label='Open',command=openFile)
-fileMenu.add_command(label='New',command=newFile)
-fileMenu.add_command(label='Save',command=appendToFile)
-fileMenu.add_command(label='Run',command=runFile)
-fileMenu.add_separator()
-fileMenu.add_command(label='Exit',command=quit)
+def openFileFM():
+    openFile(Event)
 
-editMenu = Menu(menubar, tearoff=0)
-menubar.add_cascade(label='Edit',menu=editMenu)
-editMenu.add_command(label='Replace',command=replaceText)
-editMenu.add_command(label='Find',command=findText)
-editMenu.add_command(label='Clear',command=clearFile)
+def newFileFM():
+    newFile(Event)
+    
+def runFileFM():
+    runFile(Event)
 
-otherMenu = Menu(menubar, tearoff=0)
-menubar.add_cascade(label='Other',menu=otherMenu)
-otherMenu.add_command(label='Changelog',command=openChangelog)
-otherMenu.add_separator()
-otherMenu.add_command(label='Change Color',command=changeColor)
-otherMenu.add_command(label='Change Font and Size',command=changeFont)
-otherMenu.add_separator()
-otherMenu.add_command(label='Light Mode',command=lightMode)
-otherMenu.add_command(label='Dark Mode',command=darkMode)
-otherMenu.add_command(label='Private Mode',command=privMode)
+def replaceTextFM():
+    replaceText(Event)
+
+def findTextFM():
+    findText(Event)
+
+def clearFileFM():
+    clearFile(Event)
+
+def privModeFM():
+    privMode(Event)
+
+def darkModeFM():
+    darkMode(Event)
 
 ##Keyboard Shortcuts
 #File Handaling
@@ -206,5 +220,38 @@ win.bind('<Control-h>', replaceText)
 win.bind('<Control-f>', findText)
 win.bind('<Control-l>', clearFile)
 win.bind('<Control-p>', privMode)
+win.bind('<Control-0>', darkMode)
+win.bind('<Control-slash>', quit)
+
+##Menubar
+menubar = Menu(win)
+win.config(menu=menubar)
+
+fileMenu = Menu(menubar, tearoff=0)
+menubar.add_cascade(label='File',menu=fileMenu)
+fileMenu.add_command(label='Open',command=openFileFM)
+fileMenu.add_command(label='New',command=newFileFM)
+fileMenu.add_command(label='Save',command=appendToFileFM)
+fileMenu.add_command(label='Run',command=runFileFM)
+fileMenu.add_separator()
+fileMenu.add_command(label='Exit',command=quit)
+
+editMenu = Menu(menubar, tearoff=0)
+menubar.add_cascade(label='Edit',menu=editMenu)
+editMenu.add_command(label='Replace',command=replaceTextFM)
+editMenu.add_command(label='Find',command=findTextFM)
+editMenu.add_command(label='Clear',command=clearFileFM)
+
+otherMenu = Menu(menubar, tearoff=0)
+menubar.add_cascade(label='Other',menu=otherMenu)
+otherMenu.add_command(label='Changelog',command=openChangelog)
+otherMenu.add_command(label='Help',command=help)
+otherMenu.add_separator()
+otherMenu.add_command(label='Change Color',command=changeColor)
+otherMenu.add_command(label='Change Font and Size',command=changeFont)
+otherMenu.add_separator()
+otherMenu.add_command(label='Light Mode',command=lightMode)
+otherMenu.add_command(label='Dark Mode',command=darkModeFM)
+otherMenu.add_command(label='Private Mode',command=privModeFM)
 
 win.mainloop()
