@@ -24,19 +24,25 @@ entry.pack()
 def appendToFile(event):
     userCode = entry.get("1.0", tk.END).strip()
     userFileLocation = filedialog.askopenfilename(title="Save to file")
-    with open(userFileLocation, 'w') as file:
-        file.write(userCode)
+    try:
+        with open(userFileLocation, 'w') as file:
+            file.write(userCode)
+    except:
+        pass
 
 def openFile(event):
     userFileLocation = filedialog.askopenfilename(title="Open file")
-    with open(userFileLocation, 'r') as file:
-        userFileContent = file.read()
-        entry.delete("1.0", tk.END)
-        entry.insert(tk.END, userFileContent)
-    win.title(f'SyntaxEdit - {userFileLocation}')
+    try:
+        with open(userFileLocation, 'r') as file:
+            userFileContent = file.read()
+            entry.delete("1.0", tk.END)
+            entry.insert(tk.END, userFileContent)
+        win.title(f'SyntaxEdit - {userFileLocation}')
+    except:
+        pass
 
 def newFile(event):
-    userFileLocation = filedialog.asksaveasfile(initialdir="C:\\Users",defaultextension='.txt',filetypes=[
+    userFileLocation = filedialog.askopenfilename(initialdir="C:\\Users",defaultextension='.txt',filetypes=[
         ("Text file",".txt"),
         ("HTML file", ".htm"),("JavaScript file", ".js"),("CSS file", ".css"),
         ("Python file", ".py"),
@@ -46,9 +52,12 @@ def newFile(event):
         ("R file", ".r"),
         ("Rust file", ".rs"),
         ("All files", ".*")], title="Create File")
-    with open(userFileLocation, 'w') as file:
-        file.write('##//File Created with SyntaxEdit')
-    openFile()
+    try:    
+        with open(userFileLocation, 'w') as file:
+            file.write('##//File Created with SyntaxEdit')
+        openFile()
+    except:
+        pass
     
 def runFile(event):
     userFileLocation = filedialog.askopenfilename(title="Select file to run")
@@ -56,7 +65,10 @@ def runFile(event):
         command = ["cmd.exe", "/c", userFileLocation]
     else:
         command = ["sh", userFileLocation]
-    sub.run(command)
+    try:
+        sub.run(command)
+    except:
+        pass
 
 def replaceText(event):
     replace = tk.Tk()
