@@ -282,6 +282,9 @@ def setLang(lang):
             assign_color(',', 'yellow')
             assign_color('.', 'yellow')
             assign_color('pass', 'purple')
+            assign_color('True', 'green')
+            assign_color('False', 'green')
+            assign_color(';', 'red')
     elif lang == 'html':
         def on_key(event):
             assign_color('<', 'green')
