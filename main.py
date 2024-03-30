@@ -54,7 +54,7 @@ def newFile(event):
         ("All files", ".*")], title="Create File")
     try:    
         with open(userFileLocation, 'w') as file:
-            file.write('//##File Created with SyntaxEdit')
+            file.write('##//File Created with SyntaxEdit')
         openFile()
     except:
         pass
@@ -195,30 +195,32 @@ def changeFont():
 ##Templates
 def htmlTemp():
     entry.delete('0.0', tk.END)
-    entry.insert('1.0','<!DOCTYPE html> \n')
-    entry.insert('2.0', '<html lang="en"> \n')
-    entry.insert('3.0', '<head> \n')
-    entry.insert('4.0', '   <title>Webpage</title> \n')
-    entry.insert('5.0', '   <link rel="stylesheet" href="styles.css"> \n')
-    entry.insert('6.0', '   <script src="main.js"></script> \n')
-    entry.insert('7.0', '</head> \n')
-    entry.insert('8.0', '<body> \n')
-    entry.insert('9.0', '   <p>HTML</p> \n')
-    entry.insert('10.0', '</body> \n')
-    entry.insert('11.0', '</html> \n')
+    entry.insert('1.0', '''
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Webpage</title>
+    <link rel="stylesheet" href="______.css">
+    <script src="____.js"></script>
+</head>
+<body>
+    <p>Hello, World</p
+    <div class="watermark">Made with Syntax Edit</div>
+</body>
+</html>
+''')
 
 def pyTempGUI():
     entry.delete('0.0', tk.END)
-    entry.insert('1.0', 'from tkinter import * \n')
-    entry.insert('2.0', '\n')
-    entry.insert('3.0', 'root = Tk() \n')
-    entry.insert('4.0', 'root.title("Python GUI using tkinter!") \n')
-    entry.insert('5.0', 'root.iconbitmap(r"icon.ico") \n')
-    entry.insert('6.0', 'root.geometry("500x500") \n')
-    entry.insert('7.0', '\n')
-    entry.insert('8.0', '\n')
-    entry.insert('9.0', '\n')
-    entry.insert('10.0', 'root.mainloop() \n')
+    entry.insert('1.0', '''
+from tkinter import *
+                 
+root = Tk()
+root.title('Tkinter GUI')
+root.geometry('420x420')
+                 
+root.mainloop()  
+''')
 
 ##Menu Command
 def appendToFileFM():
@@ -261,34 +263,60 @@ def assign_color(word, color):
         entry.tag_add(color, start, end)
         start = end
 
-def on_key(event):
-    assign_color('<', 'blue')
-    assign_color('>', 'blue')
-    assign_color('#', 'green')
-    assign_color('//', 'green')
-    assign_color('<!--', 'green')
-    assign_color('/', 'blue')
-    assign_color('import', 'blue')
-    assign_color('while', 'green')
-    assign_color('for', 'green')
-    assign_color('(', 'green')
-    assign_color(')', 'green')
-    assign_color('def', 'blue')
-    assign_color('if', 'green')
-    assign_color('else', 'green')
-    assign_color('\'', 'green')
-    assign_color('\"', 'green')
-    assign_color('=', 'yellow')
-    assign_color(':', 'yellow')
-    assign_color('{', 'yellow')
-    assign_color('}', 'yellow')
-    assign_color(',', 'yellow')
-    assign_color('.', 'yellow')
-    assign_color('pass', 'purple')
+def setLang(lang):
+    if lang == 'py':
+        def on_key(event):
+            assign_color('#', 'green')
+            assign_color('import', 'blue')
+            assign_color('while', 'purple')
+            assign_color('for', 'purple')
+            assign_color('item', 'yellow')
+            assign_color('def', 'blue')
+            assign_color('if', 'purple')
+            assign_color('else', 'purple')
+            assign_color('elif', 'purple')
+            assign_color('\'', 'green')
+            assign_color('\"', 'green')
+            assign_color('=', 'yellow')
+            assign_color(':', 'yellow')
+            assign_color(',', 'yellow')
+            assign_color('.', 'yellow')
+            assign_color('pass', 'purple')
+    elif lang == 'html':
+        def on_key(event):
+            assign_color('<', 'green')
+            assign_color('>', 'green')
+            assign_color('/', 'purple')
+            assign_color('\'', 'green')
+            assign_color('\"', 'green')
+            assign_color('=', 'yellow')
+            assign_color(':', 'yellow')
+    elif lang == 'css':
+        def on_key(event):
+            assign_color('.', 'yellow')
+            assign_color('#', 'yellow')
+            assign_color('body', 'yellow')
+            assign_color('"', 'green')
+            assign_color('\'', 'green')
+            assign_color('/*', 'green')
+            assign_color('{', 'yellow')
+            assign_color('}', 'yellow')
+            assign_color(':', 'yellow')
+    elif lang == 'js':
+        def on_key(event):
+            assign_color('.', 'yellow')
+            assign_color('=', 'yellow')
+            assign_color('let', 'blue')
+            assign_color('var', 'blue')
+            assign_color('"', 'green')
+            assign_color('\'', 'green')
+            assign_color('/', 'green')
+            assign_color('{', 'yellow')
+            assign_color('}', 'yellow')
+            assign_color(';', 'yellow')
 
+        win.bind('<Key>', on_key)
 
-
-win.bind('<Key>', on_key)
 
 ##Keyboard Shortcuts
 #File Handaling
@@ -321,6 +349,13 @@ menubar.add_cascade(label='Edit',menu=editMenu)
 editMenu.add_command(label='Replace',command=replaceTextFM)
 editMenu.add_command(label='Find',command=findTextFM)
 editMenu.add_command(label='Clear',command=clearFileFM)
+
+langMenu = Menu(menubar, tearoff=0)
+menubar.add_cascade(label='Language',menu=langMenu)
+langMenu.add_command(label='Python', command=lambda: setLang('py'))
+langMenu.add_command(label='HTML', command=lambda: setLang('html'))
+langMenu.add_command(label='CSS', command=lambda: setLang('css'))
+langMenu.add_command(label='JS', command=lambda: setLang('js'))
 
 tempsMenu = Menu(menubar, tearoff=0)
 menubar.add_cascade(label='Templates',menu=tempsMenu)
