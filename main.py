@@ -54,7 +54,7 @@ def newFile(event):
         ("All files", ".*")], title="Create File")
     try:    
         with open(userFileLocation, 'w') as file:
-            file.write('##//File Created with SyntaxEdit')
+            file.write('//##File Created with SyntaxEdit')
         openFile()
     except:
         pass
