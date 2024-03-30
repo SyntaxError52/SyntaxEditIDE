@@ -1,7 +1,7 @@
 ###SyntaxEdit
 ##Import Modules
 from tkinter import *
-from tkinter import filedialog, colorchooser
+from tkinter import filedialog, colorchooser, font
 import tkinter as tk
 import subprocess as sub
 import sys as sy
@@ -143,6 +143,8 @@ def openChangelog():
     tk.Label(cl, font=('Courier New', 15), fg='white', bg='black', text='Added Keyboard Shortcuts').pack()
     tk.Label(cl, font=('Courier New', 15), fg='white', bg='black', text='Added File Location Title').pack()
     tk.Label(cl, font=('Courier New', 15), fg='white', bg='black', text='Added Help').pack()
+    tk.Label(cl, font=('Courier New Bold', 25), fg='white', bg='black', text='v1.3').pack()
+    tk.Label(cl, font=('Courier New', 15), fg='white', bg='black', text='Added Templates').pack()
     cl.mainloop()
 
 
@@ -183,17 +185,49 @@ def changeFont():
     fontConfig.title('SyntaxEdit - Font Configurations')
     fontConfig.iconbitmap(r'SyntaxEditLogo.ico')
     fontConfig.geometry('500x500')
-    tk.Label(fontConfig, text='Font Name:').pack()
-    fontNameEntry = tk.Entry(fontConfig)
-    fontNameEntry.pack()
+    userFont = tk.StringVar(fontConfig, win)
+    fontBox = tk.OptionMenu(fontConfig, userFont, *font.families())
+    fontBox.pack()
     tk.Label(fontConfig, text='Font Size:').pack()
     sizeEntry = tk.Entry(fontConfig)
     sizeEntry.pack()
     def applyFont():
-        entry.config(font=(fontNameEntry.get(), sizeEntry.get()))
+        try:
+            entry.config(font=(userFont.get(), int(sizeEntry.get())))
+        except ValueError:
+            pass
     tk.Button(fontConfig, text='Apply', command=applyFont).pack()
     fontConfig.mainloop()
 
+##Templates
+def htmlTemp():
+    entry.delete('0.0', tk.END)
+    entry.insert('1.0','<!DOCTYPE html> \n')
+    entry.insert('2.0', '<html lang="en"> \n')
+    entry.insert('3.0', '<head> \n')
+    entry.insert('4.0', '   <title>Webpage</title> \n')
+    entry.insert('5.0', '   <link rel="stylesheet" href="styles.css"> \n')
+    entry.insert('6.0', '   <script src="main.js"></script> \n')
+    entry.insert('7.0', '</head> \n')
+    entry.insert('8.0', '<body> \n')
+    entry.insert('9.0', '   <p>HTML</p> \n')
+    entry.insert('10.0', '</body> \n')
+    entry.insert('11.0', '</html> \n')
+
+def pyTempGUI():
+    entry.delete('0.0', tk.END)
+    entry.insert('1.0', 'from tkinter import * \n')
+    entry.insert('2.0', '\n')
+    entry.insert('3.0', 'root = Tk() \n')
+    entry.insert('4.0', 'root.title("Python GUI using tkinter!") \n')
+    entry.insert('5.0', 'root.iconbitmap(r"icon.ico") \n')
+    entry.insert('6.0', 'root.geometry("500x500") \n')
+    entry.insert('7.0', '\n')
+    entry.insert('8.0', '\n')
+    entry.insert('9.0', '\n')
+    entry.insert('10.0', 'root.mainloop() \n')
+
+##Menu Command
 def appendToFileFM():
     appendToFile(Event)
 
@@ -253,6 +287,11 @@ menubar.add_cascade(label='Edit',menu=editMenu)
 editMenu.add_command(label='Replace',command=replaceTextFM)
 editMenu.add_command(label='Find',command=findTextFM)
 editMenu.add_command(label='Clear',command=clearFileFM)
+
+tempsMenu = Menu(menubar, tearoff=0)
+menubar.add_cascade(label='Templates',menu=tempsMenu)
+tempsMenu.add_command(label='Basic HTML',command=htmlTemp)
+tempsMenu.add_command(label='Python GUI',command=pyTempGUI)
 
 otherMenu = Menu(menubar, tearoff=0)
 menubar.add_cascade(label='Other',menu=otherMenu)
