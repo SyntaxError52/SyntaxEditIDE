@@ -204,7 +204,7 @@ def htmlTemp():
     <script src="____.js"></script>
 </head>
 <body>
-    <p>Hello, World</p
+    <p>Hello, World</p>
     <div class="watermark">Made with Syntax Edit</div>
 </body>
 </html>
@@ -315,7 +315,7 @@ def setLang(lang):
             assign_color('}', 'yellow')
             assign_color(';', 'yellow')
 
-        win.bind('<Key>', on_key)
+    win.bind('<Key>', on_key)
 
 
 ##Keyboard Shortcuts
