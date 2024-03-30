@@ -1,7 +1,7 @@
 ###SyntaxEdit
 ##Import Modules
 from tkinter import *
-from tkinter import filedialog, colorchooser, font
+from tkinter import filedialog, font
 import tkinter as tk
 import subprocess as sub
 import sys as sy
@@ -17,7 +17,7 @@ title = tk.Label(win, text="SyntaxEdit", font=('Courier New', 25), bg='black', f
 title.pack()
 
 ##Text Enter Location
-entry = tk.Text(win, height=100, width=150, font=('Courier New', 12), bg='#212121', fg='#31bd62')
+entry = tk.Text(win, height=100, width=150, font=('Courier New', 12), bg='#212121', fg='white')
 entry.pack()
 
 ##File Handaling
@@ -145,6 +145,8 @@ def openChangelog():
     tk.Label(cl, font=('Courier New', 15), fg='white', bg='black', text='Added Help').pack()
     tk.Label(cl, font=('Courier New Bold', 25), fg='white', bg='black', text='v1.3').pack()
     tk.Label(cl, font=('Courier New', 15), fg='white', bg='black', text='Added Templates').pack()
+    tk.Label(cl, font=('Courier New Bold', 25), fg='white', bg='black', text='v1.4').pack()
+    tk.Label(cl, font=('Courier New', 15), fg='white', bg='black', text='Added Syntax Highlighting').pack()
     cl.mainloop()
 
 
@@ -161,10 +163,6 @@ def help():
     tk.Label(hp, font=('Courier New', 15), fg='white', bg='black', text='Github Repo Name: SyntaxEditIDE').pack()
     hp.mainloop()
 
-def changeColor():
-    color = colorchooser.askcolor(title='Pick a color')
-    entry.config(fg=color[1])
-
 def lightMode():
     win.config(bg='#C9C9C9')
     title.config(bg='#C9C9C9', fg='black')
@@ -174,11 +172,6 @@ def darkMode(event):
     win.config(bg='black')
     title.config(bg='black', fg='white')
     entry.config(bg='#212121', fg='white')
-
-def privMode(event):
-    win.config(bg='black')
-    title.config(bg='black', fg='white')
-    entry.config(fg='#212121', bg='#212121')
 
 def changeFont():
     fontConfig = tk.Tk()
@@ -249,11 +242,53 @@ def findTextFM():
 def clearFileFM():
     clearFile(Event)
 
-def privModeFM():
-    privMode(Event)
-
 def darkModeFM():
     darkMode(Event)
+
+
+##Syntax Highlighting
+    
+entry.tag_configure('default', foreground='white')
+
+def assign_color(word, color):
+    entry.tag_configure(color, foreground=color)
+    start = '1.0'
+    while True:
+        start = entry.search(word, start, tk.END)
+        if not start:
+            break
+        end = entry.index(f'{start}+{len(word)}c')
+        entry.tag_add(color, start, end)
+        start = end
+
+def on_key(event):
+    assign_color('<', 'blue')
+    assign_color('>', 'blue')
+    assign_color('#', 'green')
+    assign_color('//', 'green')
+    assign_color('<!--', 'green')
+    assign_color('/', 'blue')
+    assign_color('import', 'blue')
+    assign_color('while', 'green')
+    assign_color('for', 'green')
+    assign_color('(', 'green')
+    assign_color(')', 'green')
+    assign_color('def', 'blue')
+    assign_color('if', 'green')
+    assign_color('else', 'green')
+    assign_color('\'', 'green')
+    assign_color('\"', 'green')
+    assign_color('=', 'yellow')
+    assign_color(':', 'yellow')
+    assign_color('{', 'yellow')
+    assign_color('}', 'yellow')
+    assign_color(',', 'yellow')
+    assign_color('.', 'yellow')
+    assign_color('pass', 'purple')
+
+
+
+win.bind('<Key>', on_key)
 
 ##Keyboard Shortcuts
 #File Handaling
@@ -265,7 +300,6 @@ win.bind('<Control-r>', runFile)
 win.bind('<Control-h>', replaceText)
 win.bind('<Control-f>', findText)
 win.bind('<Control-l>', clearFile)
-win.bind('<Control-p>', privMode)
 win.bind('<Control-0>', darkMode)
 win.bind('<Control-slash>', quit)
 
@@ -298,11 +332,9 @@ menubar.add_cascade(label='Other',menu=otherMenu)
 otherMenu.add_command(label='Changelog',command=openChangelog)
 otherMenu.add_command(label='Help',command=help)
 otherMenu.add_separator()
-otherMenu.add_command(label='Change Color',command=changeColor)
 otherMenu.add_command(label='Change Font and Size',command=changeFont)
 otherMenu.add_separator()
 otherMenu.add_command(label='Light Mode',command=lightMode)
 otherMenu.add_command(label='Dark Mode',command=darkModeFM)
-otherMenu.add_command(label='Private Mode',command=privModeFM)
 
 win.mainloop()
