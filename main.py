@@ -109,8 +109,8 @@ def help():
     hp.geometry("400x175")
     Label(hp, font=('Courier New Bold', 25), fg='white', bg='black', text='Help Page').pack()
     Label(hp, font=('Courier New', 15), fg='white', bg='black', text='Handle files using the file menu').pack()
-    Label(hp, font=('Courier New', 15), fg='white', bg='black', text='Check changes in the changelog').pack()
     Label(hp, font=('Courier New', 15), fg='white', bg='black', text='Enter your code in the text box').pack()
+    Label(hp, font=('Courier New', 15), fg='white', bg='black', text='Add Syntax Highlight by selecting language').pack()
     Label(hp, font=('Courier New', 15), fg='white', bg='black', text='Github Repo Name: SyntaxEditIDE').pack()
     hp.mainloop()
 
