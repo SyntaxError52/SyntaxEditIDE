@@ -11,11 +11,8 @@ win.title('SyntaxEdit')
 win.configure(bg="black")
 win.geometry("500x600")
 
-title = Label(win, text="SyntaxEdit", font=('Courier New', 25), bg='black', fg='white')
-title.pack()
-
 ##Text Enter Location
-entry = Text(win, height=100, width=150, font=('Courier New', 12), bg='#212121', fg='white')
+entry = Text(win, height=28, width=150, font=('Courier New', 12), bg='#212121', fg='white')
 entry.pack()
 
 ##File Handaling
@@ -55,32 +52,33 @@ def runFile(event=None):
             pass
 
 def replaceText(event):
-    replace = Tk()
-    replace.title('SyntaxEdit - Replace')
-    findEntryLabel = Label(replace, text='Find: ', width=100)
+    findEntryLabel = Label(win, text='Find: ', width=100, fg='white', bg='black')
     findEntryLabel.pack()
-    find = Entry(replace, width=30)
+    find = Entry(win, width=30, fg='white', bg='#212121')
     find.pack()
-    replaceEntryLabel = Label(replace, text='Replace: ', width=100)
+    replaceEntryLabel = Label(win, text='Replace: ', width=100, fg='white', bg='black')
     replaceEntryLabel.pack()
-    replaceE = Entry(replace, width=30)
-    replaceE.pack()
+    replace = Entry(win, width=30, fg='white', bg='#212121')
+    replace.pack()
     def getCharValues():
         userChar1 = find.get().strip()
-        userChar2 = replaceE.get().strip()
+        userChar2 = replace.get().strip()
         newContent = entry.get("1.0", END).strip().replace(userChar1, userChar2)
         entry.delete("1.0", END)
         entry.insert("1.0", newContent)
-    replaceButton = Button(replace, text='Replace', command=getCharValues)
+        findEntryLabel.destroy()
+        find.destroy()
+        replaceEntryLabel.destroy()
+        replace.destroy()
+        replaceButton.destroy()
+    replaceButton = Button(win, text='Replace', command=getCharValues, fg='white', bg='#212121')
     replaceButton.pack()
     replace.mainloop()
 
 def findText(event):
-    find = Tk()
-    find.title('SyntaxEdit - Find')
-    findEntryLabel = Label(find, text='Find: ', width=100)
+    findEntryLabel = Label(win, text='Find: ', width=100, fg='white', bg='black')
     findEntryLabel.pack()
-    findBox = Entry(find, width=30)
+    findBox = Entry(win, width=30, fg='white', bg='#212121')
     findBox.pack()
     def findChar():
         userChar = findBox.get()
@@ -89,58 +87,23 @@ def findText(event):
         newContent = entry.get("1.0", END).strip().replace(userChar, userCharHighlight)
         entry.delete("1.0", END)
         entry.insert("1.0", newContent)
-    findButton = Button(find, text='Find', command=findChar)
+        findEntryLabel.destroy()
+        findBox.destroy()
+        findButton.destroy()
+    findButton = Button(win, text='Find', command=findChar, fg='white', bg='#212121')
     findButton.pack()
     find.mainloop()
 
 def clearFile(event):
-    warning = Tk()
-    warning.title('SyntaxEdit - Find')
-    Label(warning, text='Are you sure you want to clear the content of this file', width=100).pack()
+    warning = Label(win, text='Are you sure you want to clear the content of this file', width=100, fg='white', bg='black')
+    warning.pack()
     def clearCont():
         entry.delete("1.0", END)
-    Button(warning, text='Clear File', command=clearCont).pack()
+        warning.destroy()
+        okay.destroy()
+    okay =  Button(win, text='Clear File', command=clearCont, fg='white', bg='#212121')
+    okay.pack()
     warning.mainloop()
-
-def help():
-    hp = Tk()
-    hp.title('SyntaxEdit - Help')
-    hp.configure(bg="black")
-    hp.geometry("400x175")
-    Label(hp, font=('Courier New Bold', 25), fg='white', bg='black', text='Help Page').pack()
-    Label(hp, font=('Courier New', 15), fg='white', bg='black', text='Handle files using the file menu').pack()
-    Label(hp, font=('Courier New', 15), fg='white', bg='black', text='Enter your code in the text box').pack()
-    Label(hp, font=('Courier New', 15), fg='white', bg='black', text='Add Syntax Highlight by selecting language').pack()
-    Label(hp, font=('Courier New', 15), fg='white', bg='black', text='Github Repo Name: SyntaxEditIDE').pack()
-    hp.mainloop()
-
-def lightMode():
-    win.config(bg='#C9C9C9')
-    title.config(bg='#C9C9C9', fg='black')
-    entry.config(bg='#EDEDED', fg='black')
-
-def darkMode(event):
-    win.config(bg='black')
-    title.config(bg='black', fg='white')
-    entry.config(bg='#212121', fg='white')
-
-def changeFont():
-    fontConfig = Tk()
-    fontConfig.title('SyntaxEdit - Font Configurations')
-    fontConfig.geometry('500x500')
-    userFont = StringVar(fontConfig, win)
-    fontBox = OptionMenu(fontConfig, userFont, *font.families())
-    fontBox.pack()
-    Label(fontConfig, text='Font Size:').pack()
-    sizeEntry = Entry(fontConfig)
-    sizeEntry.pack()
-    def applyFont():
-        try:
-            entry.config(font=(userFont.get(), int(sizeEntry.get())))
-        except ValueError:
-            pass
-    Button(fontConfig, text='Apply', command=applyFont).pack()
-    fontConfig.mainloop()
 
 ##Templates
 def htmlTemp():
@@ -171,29 +134,6 @@ root.geometry('420x420')
                  
 root.mainloop()  
 ''')
-
-##Menu Command
-def appendToFileFM():
-    appendToFile(Event)
-
-def openFileFM():
-    openFile(Event)
-    
-def runFileFM():
-    runFile(Event)
-
-def replaceTextFM():
-    replaceText(Event)
-
-def findTextFM():
-    findText(Event)
-
-def clearFileFM():
-    clearFile(Event)
-
-def darkModeFM():
-    darkMode(Event)
-
 
 ##Syntax Highlighting
     
@@ -290,7 +230,6 @@ win.bind('<Control-r>', runFile)
 win.bind('<Control-h>', replaceText)
 win.bind('<Control-f>', findText)
 win.bind('<Control-l>', clearFile)
-win.bind('<Control-0>', darkMode)
 win.bind('<Control-slash>', quit)
 
 ##Menubar
@@ -299,17 +238,17 @@ win.config(menu=menubar)
 
 fileMenu = Menu(menubar, tearoff=0)
 menubar.add_cascade(label='File',menu=fileMenu)
-fileMenu.add_command(label='Open',command=openFileFM)
-fileMenu.add_command(label='Save',command=appendToFileFM)
-fileMenu.add_command(label='Run',command=runFileFM)
+fileMenu.add_command(label='Open',command=lambda: openFile(None))
+fileMenu.add_command(label='Save',command=lambda: appendToFile(None))
+fileMenu.add_command(label='Run',command=lambda: runFile(None))
 fileMenu.add_separator()
 fileMenu.add_command(label='Exit',command=quit)
 
 editMenu = Menu(menubar, tearoff=0)
 menubar.add_cascade(label='Edit',menu=editMenu)
-editMenu.add_command(label='Replace',command=replaceTextFM)
-editMenu.add_command(label='Find',command=findTextFM)
-editMenu.add_command(label='Clear',command=clearFileFM)
+editMenu.add_command(label='Replace',command=lambda: replaceText(None))
+editMenu.add_command(label='Find',command=lambda: findText(None))
+editMenu.add_command(label='Clear',command=lambda: clearFile(None))
 
 langMenu = Menu(menubar, tearoff=0)
 menubar.add_cascade(label='Language',menu=langMenu)
@@ -322,14 +261,5 @@ tempsMenu = Menu(menubar, tearoff=0)
 menubar.add_cascade(label='Templates',menu=tempsMenu)
 tempsMenu.add_command(label='Basic HTML',command=htmlTemp)
 tempsMenu.add_command(label='Python GUI',command=pyTempGUI)
-
-otherMenu = Menu(menubar, tearoff=0)
-menubar.add_cascade(label='Other',menu=otherMenu)
-otherMenu.add_command(label='Help',command=help)
-otherMenu.add_separator()
-otherMenu.add_command(label='Change Font and Size',command=changeFont)
-otherMenu.add_separator()
-otherMenu.add_command(label='Light Mode',command=lightMode)
-otherMenu.add_command(label='Dark Mode',command=darkModeFM)
 
 win.mainloop()
